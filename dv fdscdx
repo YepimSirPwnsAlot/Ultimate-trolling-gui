@@ -2,8 +2,8 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 LocalPlayer.Chatted:Connect(function(msg)
-	if msg:lower() == "/open UTG" then
-		if Main.Visible = true then
+	if msg:lower() == "/open utg" then
+		if Main.Visible then
 			Main.Visible = false
 		else
 			wait(4.5)
