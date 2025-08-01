@@ -409,7 +409,6 @@ local running = true
 local swap = true
 
 task.spawn(function()
-	-- Swap the image every 0.5 seconds while running
 	while running do
 		NumberImage.Image = swap and "rbxassetid://134169990445330" or "rbxassetid://95323780549355"
 		swap = not swap
@@ -435,6 +434,14 @@ running = false
 wait(1)
 NumberImage:Destroy()
 Frame:Destroy()
+
+local music2 = Instance.new("Sound")
+music2.Parent = game.Workspace
+music2.SoundId = "rbxassetid://123404399362375"
+music2.Volume = 5
+music2.PlaybackSpeed = 1
+music2.Looped = true
+music2:Play()
 
 local InsertService = game:GetService("InsertService")
 local player = LocalPlayer
@@ -546,24 +553,25 @@ local OpenClose = Instance.new("TextButton")
 OpenClose.Name = "OpenClose"
 OpenClose.Parent = screenGui
 OpenClose.Size = UDim2.new(0, 104, 0, 50)
-OpenClose.Position = UDim2.new(0, 315, 0, 478)
+OpenClose.Position = UDim2.new(0, 750, 0, 478)
 OpenClose.BackgroundTransparency = 0.2
 OpenClose.Text = "Close"
 OpenClose.TextSize = 20
-OpenClose.TextColor3 = Color3.new(255, 255, 255)
+OpenClose.TextColor3 = Color3.fromRGB(6, 64, 43)
 OpenClose.Font = Enum.Font.SourceSansBold
 OpenClose.TextStrokeTransparency = 0
+OpenClose.BackgroundTransparency = 0.2
+OpenClose.BorderSizePixel = 0
 OpenClose.TextTransparency = 0
-
-wait(17)
-
-local music2 = Instance.new("Sound")
-music2.Parent = game.Workspace
-music2.SoundId = "rbxassetid://123404399362375"
-music2.Volume = 5
-music2.PlaybackSpeed = 1
-music2.Looped = true
-music2:Play()
+OpenClose.MouseButton1Click:Connect(function()
+	if OpenClose.Text == "Close" then
+		frame.Visible = false	
+		OpenClose.Text = "Open"
+	else
+		frame.Visible = true
+		OpenClose.Text = "Close"
+	end
+end)
 end)
 
 UICorner_7.Parent = Splatterhouse
@@ -1439,29 +1447,6 @@ AmongUs.TextColor3 = Color3.fromRGB(255, 255, 255)
 AmongUs.TextSize = 20.000
 AmongUs.TextWrapped = true
 AmongUs.TextXAlignment = Enum.TextXAlignment.Left
-AmongUs.MouseButton1Down:Connect(function()
-if game.Players.LocalPlayer.Character.Head:FindFirstChild("BillboardGui") then
-game.Players.LocalPlayer.Character.Head:FindFirstChild("BillboardGui"):Remove()	
-end
-plr = game.Players.LocalPlayer.Name
-y = Instance.new("BillboardGui")
-y.Size = UDim2.new(0,100,0,150)
-y.StudsOffset = Vector3.new(0,1,0)
-y.Parent = game.Players[plr].Character.Head
-y.Adornee = game.Players[plr].Character.Head
-f = Instance.new("TextLabel")
-f.Parent = y
-f.BackgroundTransparency = 1
-f.Position = UDim2.new(0,0,0,-50)
-f.Size = UDim2.new(0,100,0,100)
-f.Font = ("Arial")
-f.FontSize = ("Size48")
-f.Text = game.Players.LocalPlayer.Name
-f.TextStrokeColor3 = Color3.new(0,0,0)
-f.TextColor3 = Color3.new(90/255, 90/255, 90/255)
-f.TextStrokeTransparency = 0
-f.TextYAlignment = "Bottom"
-end)
 
 UICorner_27.Parent = AmongUs
 
