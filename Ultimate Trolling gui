@@ -157,11 +157,15 @@ Main.Name = "Main"
 Main.Parent = UltimateTrollingGuiV6
 Main.Active = true
 Main.Draggable = true
-Main.BackgroundColor3 = Color3.fromRGB(137, 0, 254)
+Main.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Main.BorderSizePixel = 0
 Main.Position = UDim2.new(0.382268965, 0, 1.18099999, 0)
 Main.Size = UDim2.new(0, 451, 0, 525)
 Main.Visible = true
+
+local UIGradient = Instance.new("UIGradient")
+UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(137, 0, 254)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(223, 0, 255))}
+UIGradient.Parent = Main
 
 UICorner.Parent = Main
 UICorner.CornerRadius = UDim.new(0, 18)
@@ -176,7 +180,7 @@ Title.Font = Enum.Font.SourceSans
 Title.Text = "ULTIMATE TROLLING GUI"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextScaled = true
-Title.TextSize = 20
+Title.TextSize = 15
 Title.TextWrapped = true
 
 Welcome2.Name = "Welcome2"
@@ -214,6 +218,18 @@ ScrollingFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ScrollingFrame.BorderSizePixel = 0
 ScrollingFrame.Size = UDim2.new(0, 427, 0, 333)
 ScrollingFrame.ScrollBarThickness = 0
+
+local UIPadding = Instance.new("UIPadding")
+UIPadding.Parent = ScrollingFrame
+UIPadding.PaddingTop = UDim.new(0, 10)
+UIPadding.PaddingBottom = UDim.new(0, 10)
+UIPadding.PaddingLeft = UDim.new(0, 10)
+UIPadding.PaddingRight = UDim.new(0, 10)
+
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Parent = ScrollingFrame
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 8)
 
 local UICorner = Instance.new("UICorner")
 UICorner.Parent = ScrollingFrame
@@ -457,11 +473,11 @@ if character:FindFirstChild("Torso") and character:FindFirstChild("Left Arm") th
 
     coroutine.wrap(function()
         if character.Head:FindFirstChild("face") ~= nil then
-            character.Head.face.Texture = "rbxassetid://19387063"
+            character.Head.face.Texture = "rbxassetid://126711685447776"
         else
             local newface = Instance.new("Decal", character.Head)
             newface.Face = Enum.NormalId.Front
-            newface.Texture = "rbxassetid://19387063"
+            newface.Texture = "rbxassetid://126711685447776"
             newface.Name = "face"
         end
     end)()
@@ -479,18 +495,46 @@ if character:FindFirstChild("Torso") and character:FindFirstChild("Left Arm") th
         end
     end
 
-    local faceAssetId = 126675904204042
-    local success, model = pcall(function()
-        return InsertService:LoadAsset(faceAssetId)
-    end)
+local Players = game:GetService("Players")
+local InsertService = game:GetService("InsertService")
+local accessoryId = 126675904204042 -- Hockey Heister Mask asset ID
 
-    if success and model then
-        local accessory = model:FindFirstChildOfClass("Accessory")
-        if accessory and humanoid then
-            accessory.Parent = character
-            humanoid:AddAccessory(accessory)
-        end
-    end
+local function onCharacterAdded(character)
+	local success, model = pcall(function()
+		return InsertService:LoadAsset(accessoryId)
+	end)
+
+	if not success or not model then
+		warn("Failed to load Hockey Heister Mask.")
+		return
+	end
+
+	local accessory = model:FindFirstChildWhichIsA("Accessory")
+	if not accessory then
+		warn("Accessory not found in model.")
+		return
+	end
+
+	accessory.Parent = character
+
+	local handle = accessory:FindFirstChild("Handle")
+	if handle then
+		local maskAttachment = handle:FindFirstChildWhichIsA("Attachment")
+		local head = character:WaitForChild("Head", 5)
+		if head then
+			local headAttachment = head:FindFirstChild(maskAttachment.Name)
+			if headAttachment then
+				handle.CFrame = headAttachment.CFrame * maskAttachment.CFrame:Inverse()
+			end
+		end
+	end
+end
+
+local player = Players.LocalPlayer
+if player.Character then
+	onCharacterAdded(player.Character)
+end
+player.CharacterAdded:Connect(onCharacterAdded)
 
     local shirt = Instance.new("Shirt")
     shirt.ShirtTemplate = "rbxassetid://16736147782"
@@ -548,16 +592,18 @@ createLabel(controlFrame, "J - Jump Kick", 205)
 createLabel(controlFrame, "U - Uppercut", 245)
 createLabel(controlFrame, "G - Grab and Throw", 285)
 createLabel(controlFrame, "R - Slide Kick", 325)
+createLabel(controlFrame, "F - Get Shotgun", 365)
 
 local OpenClose = Instance.new("TextButton")
 OpenClose.Name = "OpenClose"
 OpenClose.Parent = screenGui
 OpenClose.Size = UDim2.new(0, 104, 0, 50)
-OpenClose.Position = UDim2.new(0, 750, 0, 478)
+OpenClose.Position = UDim2.new(0, 850, 0, 478)
 OpenClose.BackgroundTransparency = 0.2
 OpenClose.Text = "Close"
 OpenClose.TextSize = 20
-OpenClose.TextColor3 = Color3.fromRGB(6, 64, 43)
+OpenClose.TextColor3 = Color3.fromRGB(255, 255, 255)
+OpenClose.BackgroundColor3 = Color3.fromRGB(6, 64, 43)
 OpenClose.Font = Enum.Font.SourceSansBold
 OpenClose.TextStrokeTransparency = 0
 OpenClose.BackgroundTransparency = 0.2
@@ -650,7 +696,7 @@ Solario.BackgroundColor3 = Color3.fromRGB(250, 128, 114)
 Solario.Position = UDim2.new(0.0093457941, 0, 0.154976189, 0)
 Solario.Size = UDim2.new(0, 419, 0, 36)
 Solario.Font = Enum.Font.SourceSansBold
-Solario.Text = "    Solario"
+Solario.Text = "    Solaris"
 Solario.TextColor3 = Color3.fromRGB(255, 255, 255)
 Solario.TextSize = 20.000
 Solario.TextWrapped = true
@@ -2061,7 +2107,7 @@ newTag.BorderSizePixel = 0
 
 InsanityPowers.Name = "InsanityPowers"
 InsanityPowers.Parent = ScrollingFrame
-InsanityPowers.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+InsanityPowers.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 InsanityPowers.Position = UDim2.new(0.00934579782, 0, 0.718145311, 0)
 InsanityPowers.Size = UDim2.new(0, 419, 0, 36)
 InsanityPowers.Font = Enum.Font.SourceSansBold
@@ -2293,7 +2339,7 @@ newTag.BorderSizePixel = 0
 
 Pillow.Name = "Pillow"
 Pillow.Parent = ScrollingFrame
-Pillow.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+Pillow.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 Pillow.Position = UDim2.new(0.00934579782, 0, 0.764183879, 0)
 Pillow.Size = UDim2.new(0, 419, 0, 36)
 Pillow.Font = Enum.Font.SourceSansBold
@@ -2307,7 +2353,7 @@ UICorner_50.Parent = Pillow
 
 Kara.Name = "Kara"
 Kara.Parent = ScrollingFrame
-Kara.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+Kara.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 Kara.Position = UDim2.new(0.00934579782, 0, 0.779530048, 0)
 Kara.Size = UDim2.new(0, 419, 0, 36)
 Kara.Font = Enum.Font.SourceSansBold
@@ -2321,7 +2367,7 @@ UICorner_51.Parent = Kara
 
 BlackHole.Name = "BlackHole"
 BlackHole.Parent = ScrollingFrame
-BlackHole.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+BlackHole.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 BlackHole.Position = UDim2.new(0.00934579782, 0, 0.839844108, 0)
 BlackHole.Size = UDim2.new(0, 419, 0, 36)
 BlackHole.Font = Enum.Font.SourceSansBold
@@ -2335,7 +2381,7 @@ UICorner_52.Parent = BlackHole
 
 Baldi.Name = "Baldi"
 Baldi.Parent = ScrollingFrame
-Baldi.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+Baldi.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 Baldi.Position = UDim2.new(0.00934579782, 0, 0.85554719, 0)
 Baldi.Size = UDim2.new(0, 419, 0, 36)
 Baldi.Font = Enum.Font.SourceSansBold
@@ -2457,7 +2503,7 @@ UICorner_53.Parent = Baldi
 
 bbc.Name = "British Broadcasting Channel"
 bbc.Parent = ScrollingFrame
-bbc.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+bbc.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 bbc.Position = UDim2.new(0.00934579782, 0, 0.915861249, 0)
 bbc.Size = UDim2.new(0, 419, 0, 36)
 bbc.Font = Enum.Font.SourceSansBold
@@ -2471,7 +2517,7 @@ UICorner_54.Parent = bbc
 
 TouchKill.Name = "TouchKill"
 TouchKill.Parent = ScrollingFrame
-TouchKill.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+TouchKill.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 TouchKill.Position = UDim2.new(0.00934579782, 0, 0.809151709, 0)
 TouchKill.Size = UDim2.new(0, 419, 0, 36)
 TouchKill.Font = Enum.Font.SourceSansBold
@@ -2485,7 +2531,7 @@ UICorner_55.Parent = TouchKill
 
 TakeTheL.Name = "TakeTheL"
 TakeTheL.Parent = ScrollingFrame
-TakeTheL.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+TakeTheL.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 TakeTheL.Position = UDim2.new(0.00934579782, 0, 0.824497938, 0)
 TakeTheL.Size = UDim2.new(0, 419, 0, 36)
 TakeTheL.Font = Enum.Font.SourceSansBold
@@ -2499,7 +2545,7 @@ UICorner_56.Parent = TakeTheL
 
 Grabknife.Name = "Grab Knife"
 Grabknife.Parent = ScrollingFrame
-Grabknife.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+Grabknife.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 Grabknife.Position = UDim2.new(0.00934579782, 0, 0.886239529, 0)
 Grabknife.Size = UDim2.new(0, 419, 0, 36)
 Grabknife.Font = Enum.Font.SourceSansBold
@@ -2513,7 +2559,7 @@ UICorner_57.Parent = Grabknife
 
 Rtx.Name = "Rtx"
 Rtx.Parent = ScrollingFrame
-Rtx.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+Rtx.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 Rtx.Position = UDim2.new(0.00934579782, 0, 0.901585698, 0)
 Rtx.Size = UDim2.new(0, 419, 0, 36)
 Rtx.Font = Enum.Font.SourceSansBold
@@ -2527,7 +2573,7 @@ UICorner_58.Parent = Rtx
 
 RainbowKing.Name = "RainbowKing"
 RainbowKing.Parent = ScrollingFrame
-RainbowKing.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+RainbowKing.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 RainbowKing.Position = UDim2.new(0.00934579782, 0, 0.79380554, 0)
 RainbowKing.Size = UDim2.new(0, 419, 0, 36)
 RainbowKing.Font = Enum.Font.SourceSansBold
@@ -2541,7 +2587,7 @@ UICorner_59.Parent = RainbowKing
 
 Gun.Name = "Gun"
 Gun.Parent = ScrollingFrame
-Gun.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+Gun.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 Gun.Position = UDim2.new(0.00934579782, 0, 0.931207418, 0)
 Gun.Size = UDim2.new(0, 419, 0, 36)
 Gun.Font = Enum.Font.SourceSansBold
@@ -2555,7 +2601,7 @@ UICorner_60.Parent = Gun
 
 PixelCar.Name = "PixelCar"
 PixelCar.Parent = ScrollingFrame
-PixelCar.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+PixelCar.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 PixelCar.Position = UDim2.new(0.00934579782, 0, 0.961899757, 0)
 PixelCar.Size = UDim2.new(0, 419, 0, 36)
 PixelCar.Font = Enum.Font.SourceSansBold
@@ -2569,7 +2615,7 @@ UICorner_61.Parent = PixelCar
 
 HellRobotics.Name = "HellRobotics"
 HellRobotics.Parent = ScrollingFrame
-HellRobotics.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+HellRobotics.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 HellRobotics.Position = UDim2.new(0.00934579782, 0, 0.748837709, 0)
 HellRobotics.Size = UDim2.new(0, 419, 0, 36)
 HellRobotics.Font = Enum.Font.SourceSansBold
@@ -2583,7 +2629,7 @@ UICorner_62.Parent = HellRobotics
 
 Titain.Name = "Titain"
 Titain.Parent = ScrollingFrame
-Titain.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+Titain.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 Titain.Position = UDim2.new(0.00934579782, 0, 0.946553588, 0)
 Titain.Size = UDim2.new(0, 419, 0, 36)
 Titain.Font = Enum.Font.SourceSansBold
@@ -2597,7 +2643,7 @@ UICorner_63.Parent = Titain
 
 Neko.Name = "Neko"
 Neko.Parent = ScrollingFrame
-Neko.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+Neko.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 Neko.Position = UDim2.new(0.00934579782, 0, 0.870893359, 0)
 Neko.Size = UDim2.new(0, 419, 0, 36)
 Neko.Font = Enum.Font.SourceSansBold
@@ -2611,7 +2657,7 @@ UICorner_64.Parent = Neko
 
 Zen.Name = "Zen"
 Zen.Parent = ScrollingFrame
-Zen.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+Zen.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 Zen.Position = UDim2.new(0.00934579782, 0, 0.73349148, 0)
 Zen.Size = UDim2.new(0, 419, 0, 36)
 Zen.Font = Enum.Font.SourceSansBold
@@ -2752,7 +2798,7 @@ UICorner_66.Parent = BaseballBat
 
 Eggdog.Name = "Eggdog"
 Eggdog.Parent = ScrollingFrame
-Eggdog.BackgroundColor3 = Color3.fromRGB(162, 162, 162)
+Eggdog.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
 Eggdog.Position = UDim2.new(0.00934579782, 0, 0.977602839, 0)
 Eggdog.Size = UDim2.new(0, 419, 0, 36)
 Eggdog.Font = Enum.Font.SourceSansBold
