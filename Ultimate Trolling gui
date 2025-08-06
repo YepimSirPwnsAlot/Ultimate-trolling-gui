@@ -2355,6 +2355,7 @@ UIS.InputChanged:Connect(function(input)
 		update(input)
 	end
 end)
+end)
 
 UICorner_42.Parent = Disasters
 
